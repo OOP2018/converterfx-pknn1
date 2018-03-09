@@ -2,6 +2,7 @@ package converter;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -67,14 +68,15 @@ public class ConverterController {
      * Handler for the buttons.
      * - Convert the value to the target unit.
      * - Clear the field.
+     *
      * @param event Button click event.
      */
     @FXML
     public void buttonHandler(ActionEvent event) {
         if (event.getSource().equals(convertButton)) {
-            if (lastEditField == 1) {
+            if (lastEditField == 1 && field1.getLength() != 0) {
                 convert(field1, field2, unit1.getValue(), unit2.getValue());
-            } else {
+            } else if (lastEditField == 2 && field2.getLength() != 0){
                 convert(field2, field1, unit2.getValue(), unit1.getValue());
             }
         } else if (event.getSource().equals(clearButton)) {
@@ -85,13 +87,20 @@ public class ConverterController {
 
     /**
      * Convert value to the target unit and display the result.
-     * @param convertField field for filling the value to convert.
-     * @param resultField field for display the result.
-     * @param originalUnit unit of the original value.
+     *
+     * @param convertField  field for filling the value to convert.
+     * @param resultField   field for display the result.
+     * @param originalUnit  unit of the original value.
      * @param convertedUnit unit of the target value.
      */
     private void convert(TextField convertField, TextField resultField, Length originalUnit, Length convertedUnit) {
-        double value = Double.parseDouble(convertField.getText()) / convertedUnit.getValue() * originalUnit.getValue();
-        resultField.setText(String.format("%.4g", value));
+        if (!convertField.getText().matches("[\\d]+$")) {
+            double value = Double.parseDouble(convertField.getText()) / convertedUnit.getValue() * originalUnit.getValue();
+            resultField.setText(String.format("%.4g", value));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You can't input text.");
+            alert.show();
+            clearButton.fire();
+        }
     }
 }
