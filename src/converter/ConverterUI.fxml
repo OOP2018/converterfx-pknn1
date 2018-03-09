@@ -9,15 +9,15 @@
 
 <FlowPane hgap="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="800.0" vgap="30.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="converter.ConverterController">
    <children>
-      <TextField fx:id="field1" prefHeight="27.0" prefWidth="142.0">
+      <TextField fx:id="field1" prefHeight="27.0" prefWidth="100.0">
          <FlowPane.margin>
             <Insets />
          </FlowPane.margin>
       </TextField>
-      <ComboBox fx:id="unit1" prefHeight="27.0" prefWidth="100.0" />
+      <ComboBox fx:id="unit1" prefHeight="27.0" prefWidth="130.0" />
       <Label text="=" />
-      <TextField fx:id="field2" prefHeight="27.0" prefWidth="132.0" />
-      <ComboBox fx:id="unit2" layoutX="207.0" layoutY="45.0" prefHeight="27.0" prefWidth="100.0" />
+      <TextField fx:id="field2" prefHeight="27.0" prefWidth="100.0" />
+      <ComboBox fx:id="unit2" layoutX="207.0" layoutY="45.0" prefHeight="27.0" prefWidth="130.0" />
       <Button fx:id="convertButton" mnemonicParsing="false" onAction="#buttonHandler" text="Convert" />
       <Button fx:id="clearButton" mnemonicParsing="false" onAction="#buttonHandler" text="Clear" />
    </children>
