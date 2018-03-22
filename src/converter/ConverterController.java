@@ -1,11 +1,9 @@
 package converter;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -22,16 +20,19 @@ public class ConverterController {
     private TextField field2;
 
     @FXML
-    private ComboBox<Length> unit1;
+    private ComboBox<Unit> unit1;
 
     @FXML
-    private ComboBox<Length> unit2;
+    private ComboBox<Unit> unit2;
 
     @FXML
     private Button convertButton;
 
     @FXML
     private Button clearButton;
+
+    @FXML
+    private MenuItem exitButton;
 
     private byte lastEditField = 0;
 
@@ -76,7 +77,7 @@ public class ConverterController {
         if (event.getSource().equals(convertButton)) {
             if (lastEditField == 1 && field1.getLength() != 0) {
                 convert(field1, field2, unit1.getValue(), unit2.getValue());
-            } else if (lastEditField == 2 && field2.getLength() != 0){
+            } else if (lastEditField == 2 && field2.getLength() != 0) {
                 convert(field2, field1, unit2.getValue(), unit1.getValue());
             }
         } else if (event.getSource().equals(clearButton)) {
@@ -93,14 +94,33 @@ public class ConverterController {
      * @param originalUnit  unit of the original value.
      * @param convertedUnit unit of the target value.
      */
-    private void convert(TextField convertField, TextField resultField, Length originalUnit, Length convertedUnit) {
-        if (!convertField.getText().matches("[\\d]+$")) {
-            double value = Double.parseDouble(convertField.getText()) / convertedUnit.getValue() * originalUnit.getValue();
+    private void convert(TextField convertField, TextField resultField, Unit originalUnit, Unit convertedUnit) {
+        if (convertField.getText().matches("[\\d]+$")) {
+            double value = originalUnit.convert(Double.parseDouble(convertField.getText()), convertedUnit);
             resultField.setText(String.format("%.4g", value));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "You can't input text.");
             alert.show();
             clearButton.fire();
         }
+    }
+
+    /**
+     * Handling the event from the menu bar.
+     * @param event event from the menu button.
+     */
+    public void menuHandler(ActionEvent event) {
+        unit1.getItems().clear();
+        unit2.getItems().clear();
+        if (event.getSource().equals(exitButton)) {
+            Platform.exit();
+        } else {
+            UnitType unitType = UnitType.valueOf(((MenuItem) event.getSource()).getText());
+            Unit<?>[] units = UnitFactory.getInstance().getUnit(unitType);
+            unit1.getItems().addAll(units);
+            unit2.getItems().addAll(units);
+        }
+        unit1.getSelectionModel().select(0);
+        unit2.getSelectionModel().select(1);
     }
 }

@@ -5,7 +5,7 @@ package converter;
  *
  * @author Pakanon Pantisawat
  */
-public enum Length {
+public enum Length implements Unit<Length> {
     Meter(1.00),
     Centimeter(0.0100),
     Kilometer(1_000),
@@ -23,17 +23,18 @@ public enum Length {
      * Initializing Length with specific value.
      * @param value value of the unit length in meters.
      */
-    private Length (double value) {
+    Length (double value) {
         this.value = value;
     }
 
-    /**
-     * Get the value of each unit in meters.
-     * @return value of 1 meter in each unit.
-     */
+
+    @Override
+    public double convert(double amount, Length unit) {
+        return amount / this.getValue() * unit.getValue();
+    }
+
+    @Override
     public double getValue() {
         return this.value;
     }
-
-
 }
