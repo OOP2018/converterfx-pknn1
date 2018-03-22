@@ -52,17 +52,14 @@ public class ConverterController {
         }
 
         field1.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.ENTER)) {
-                convertButton.fire();
-            }
             lastEditField = 1;
         });
         field2.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.ENTER)) {
-                convertButton.fire();
-            }
             lastEditField = 2;
         });
+
+        convertButton.setDefaultButton(true);
+        clearButton.setCancelButton(true);
     }
 
     /**
