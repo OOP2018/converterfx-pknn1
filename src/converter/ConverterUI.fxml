@@ -48,6 +48,7 @@
               <MenuItem mnemonicParsing="false" onAction="#menuHandler" text="Length" />
                   <MenuItem mnemonicParsing="false" onAction="#menuHandler" text="Area" />
                   <MenuItem mnemonicParsing="false" onAction="#menuHandler" text="Weight" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuHandler" text="Temperature" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="exitButton" mnemonicParsing="false" onAction="#menuHandler" text="Exit" />
             </items>

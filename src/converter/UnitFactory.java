@@ -8,10 +8,17 @@ public class UnitFactory {
     }
 
     public Unit[] getUnit(UnitType unitType) {
-        if (unitType.equals(UnitType.Length)) return Length.values();
-        else if (unitType.equals(UnitType.Weight)) return Weight.values();
-        else if (unitType.equals(UnitType.Area)) return Area.values();
-        else throw new IllegalArgumentException("UnitType is invalid.");
+        switch (unitType) {
+            case Length:
+                return Length.values();
+            case Weight:
+                return Weight.values();
+            case Area:
+                return Area.values();
+            case Temperature:
+                return Temperature.values();
+        }
+        throw new IllegalArgumentException();
     }
 
     public static UnitFactory getInstance() {
