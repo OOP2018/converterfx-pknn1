@@ -32,7 +32,10 @@ public class ConverterController {
     private Button clearButton;
 
     @FXML
-    private MenuItem exitButton;
+    private UnitFactory unitFactory = UnitFactory.getInstance();
+
+    @FXML
+    private Menu menu;
 
     private byte lastEditField = 0;
 
@@ -42,6 +45,18 @@ public class ConverterController {
      */
     @FXML
     public void initialize() {
+        CurrencyGetter.fetchRates();
+
+        for (UnitType type : unitFactory.getUnitType()) {
+            MenuItem item = new MenuItem(type.name());
+            item.setOnAction(this::menuHandler);
+            menu.getItems().add(item);
+        }
+        menu.getItems().add(new SeparatorMenuItem());
+        MenuItem exit = new MenuItem("Exit");
+        exit.setOnAction(this::menuHandler);
+        menu.getItems().add(exit);
+
         if (unit1 != null) {
             unit1.getItems().addAll(Length.values());
             unit1.getSelectionModel().select(0);
@@ -51,12 +66,8 @@ public class ConverterController {
             unit2.getSelectionModel().select(1);
         }
 
-        field1.setOnKeyPressed(event -> {
-            lastEditField = 1;
-        });
-        field2.setOnKeyPressed(event -> {
-            lastEditField = 2;
-        });
+        field1.setOnKeyPressed(event -> lastEditField = 1);
+        field2.setOnKeyPressed(event -> lastEditField = 2);
 
         convertButton.setDefaultButton(true);
         clearButton.setCancelButton(true);
@@ -92,32 +103,45 @@ public class ConverterController {
      * @param convertedUnit unit of the target value.
      */
     private void convert(TextField convertField, TextField resultField, Unit originalUnit, Unit convertedUnit) {
-        if (convertField.getText().matches("[\\d]+$")) {
+        if (isInputValid(convertField.getText())) {
             double value = originalUnit.convert(Double.parseDouble(convertField.getText()), convertedUnit);
             resultField.setText(String.format("%.4g", value));
-        } else {
+        } else{
             Alert alert = new Alert(Alert.AlertType.ERROR, "You can't input text.");
             alert.show();
-            clearButton.fire();
+            String removedLast = convertField.getText().replaceAll("\\.|[^\\d+]", "");
+            convertField.setText(removedLast);
+//            clearButton.fire();
         }
     }
 
     /**
      * Handling the event from the menu bar.
+     *
      * @param event event from the menu button.
      */
-    public void menuHandler(ActionEvent event) {
+    private void menuHandler(ActionEvent event) {
         unit1.getItems().clear();
         unit2.getItems().clear();
-        if (event.getSource().equals(exitButton)) {
+        String buttonText = ((MenuItem) event.getSource()).getText();
+        if (buttonText.equals("Exit")) {
             Platform.exit();
         } else {
-            UnitType unitType = UnitType.valueOf(((MenuItem) event.getSource()).getText());
+            UnitType unitType = UnitType.valueOf(buttonText);
             Unit<?>[] units = UnitFactory.getInstance().getUnit(unitType);
             unit1.getItems().addAll(units);
             unit2.getItems().addAll(units);
         }
         unit1.getSelectionModel().select(0);
         unit2.getSelectionModel().select(1);
+    }
+
+    /**
+     * Check if input is valid for conversion.
+     * @param input is the text from textfield to check.
+     * @return true if input is valid, else false.
+     */
+    private boolean isInputValid(String input) {
+        return input.matches("^[0-9]{1,2}([.][0-9]{1,2})?$") && input.length() > 0;
     }
 }

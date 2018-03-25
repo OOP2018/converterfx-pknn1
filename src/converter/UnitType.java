@@ -4,5 +4,6 @@ public enum UnitType {
     Length,
     Weight,
     Area,
-    Temperature
+    Temperature,
+    Currency
 }
